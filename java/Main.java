@@ -10,7 +10,7 @@ public class Main {
         Board board = new Board(3, 3, 2, 2, initShade, colourGrid, buttonGrid, target);
         State state = new State(board, ballPositions);
 
-        GamePlayer gamePlayer = new GamePlayer(board, state);
-        gamePlayer.playInteractively();
+        GamePlayer gamePlayer = new GamePlayer(board);
+        gamePlayer.playInteractively(state);
     }
 }
