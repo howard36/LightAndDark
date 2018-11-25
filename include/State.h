@@ -14,16 +14,16 @@ class state {
     int hash;
     bool win; // whether the state is a winning state (all balls in target)
   public:
-    const board b;
+    board b;
 
-    state::state(board _b, vector<pi> _ballPos, vector<bool> _colorFlip);
+    state(board _b, vector<pi> _ballPos, vector<bool> _colorFlip);
     vector<pi> getBallPos() const { return ballPos; }
     vector<bool> getColorFlip() const { return colorFlip; }
     int getHash() const { return hash; }
     bool getWin() const { return win; }
 
-    bool state::getShade(pi p) const;
-    bool state::occupied(pi p) const;
+    bool getShade(pi p) const;
+    bool occupied(pi p) const;
     state move(int ball, int dir) const;
     void flip(int color);
     void moveBall(int ball, pi pos);
