@@ -19,6 +19,7 @@ class state {
   public:
     const board *b; // constant pointer does not ensure board is constant
 
+    state();
     state(const board *_b, vector<pi> _ballPos, vector<bool> _colorFlip, bool checkValid);
     vector<pi> getBallPos() const { return ballPos; }
     vector<bool> getColorFlip() const { return colorFlip; }

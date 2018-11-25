@@ -8,6 +8,14 @@ using namespace std;
 #include "../include/Board.h"
 #include "../include/State.h"
 
+state::state() {
+    b = nullptr;
+    ballPos = vector<pi>();
+    colorFlip = vector<bool>();
+    int hash = 0;
+    bool win = false;
+}
+
 state::state(const board *_b, vector<pi> _ballPos, vector<bool> _colorFlip, bool checkValid) : b{_b} { // uniform initialization works, but direct initialization doesn't??
     ballPos = _ballPos;
     colorFlip = _colorFlip;
