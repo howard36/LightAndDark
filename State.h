@@ -6,6 +6,8 @@
 #define y second
 using namespace std;
 
+#include "Board.h"
+
 class state {
     vector<pi> ballPos;		// position of each ball
     vector<bool> colorFlip; // whether each color has been flipped from initial shade or not

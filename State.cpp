@@ -4,8 +4,8 @@
 #define y second
 using namespace std;
 
-#include <Board.h>
-#include <State.h>
+#include "Board.h"
+#include "State.h"
 
 state::state(board _b, vector<pi> _ballPos, vector<bool> _colorFlip) : b{_b} { // uniform initialization works, but direct initialization doesn't??
     ballPos = _ballPos;

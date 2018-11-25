@@ -6,6 +6,8 @@
 #define y second
 using namespace std;
 
+#include "State.h"
+
 class board {
   public:
     const int maxX, maxY, numColors, numBalls;

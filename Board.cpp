@@ -4,8 +4,8 @@
 #define y second
 using namespace std;
 
-#include <Board.h>
-#include <State.h>
+#include "Board.h"
+#include "State.h"
 
 board::board(int _maxX,
              int _maxY,
