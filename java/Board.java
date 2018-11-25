@@ -5,7 +5,7 @@ import java.util.List;
 public class Board {
 
     public Board(int numRows, int numCols, int numBalls, int numColours, int[][] initShade, boolean[][][] colourGrid,
-            int[][] buttonGrid, Cell target) {
+            int[][] buttonGrid, boolean[][] grid, Cell target) {
         this.numRows = numRows;
         this.numCols = numCols;
         this.numBalls = numBalls;
@@ -13,6 +13,7 @@ public class Board {
         this.initShade = initShade.clone();
         this.colourGrid = colourGrid.clone();
         this.buttonGrid = buttonGrid.clone();
+        this.grid = grid.clone();
         this.target = new Cell(target);
         buildGraph();
     }
@@ -49,7 +50,10 @@ public class Board {
         for (int i = 0; i < numRows; ++i) {
             for (int j = 0; j < numCols; ++j) {
                 Cell cell = new Cell(i, j);
-                gridPanel.setColour(cell, initShade[i][j]);
+                if (grid[i][j])
+                    gridPanel.setColour(cell, initShade[i][j]);
+                else
+                    gridPanel.fadeOut(cell);
                 for (int c = 0; c < numColours; ++c) {
                     if (colourGrid[c][i][j]) {
                         gridPanel.addCircle(cell, c);
@@ -96,6 +100,10 @@ public class Board {
 
     public int getButton(Cell cell) {
         return buttonGrid[cell.row][cell.col];
+    }
+
+    public boolean validCell(Cell cell) {
+        return cell.row >= 0 && cell.row < numRows && cell.col >= 0 && cell.col < numCols && grid[cell.row][cell.col];
     }
 
     private void buildGraph() {
@@ -157,6 +165,7 @@ public class Board {
     private int[][] initShade;
     private boolean[][][] colourGrid;
     private int[][] buttonGrid;
+    private boolean[][] grid;
     private Cell target;
 
     State[] allStates;

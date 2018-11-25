@@ -39,7 +39,8 @@ public class State {
         for (int i = 0; i < board.getNumRows(); ++i) {
             for (int j = 0; j < board.getNumCols(); ++j) {
                 Cell cell = new Cell(i, j);
-                gridPanel.setColour(cell, getShade(cell));
+                if (board.validCell(cell))
+                    gridPanel.setColour(cell, getShade(cell));
             }
         }
     }
@@ -69,8 +70,7 @@ public class State {
             State s = new State(this);
             s.moveBall(ball, nextPos);
             return s;
-        } else if (nextPos.row < 0 || nextPos.row >= board.getNumRows() || nextPos.col < 0
-                || nextPos.col >= board.getNumCols()) {
+        } else if (!board.validCell(nextPos)) {
             return this;
         } else if (shade != getShade(nextPos)) {
             return this;

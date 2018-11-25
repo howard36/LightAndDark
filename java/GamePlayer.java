@@ -68,13 +68,11 @@ public class GamePlayer implements KeyListener {
     }
 
     private void move(int ball, int dir) {
+        if (path.peek().getWin()) {
+            System.exit(0);
+        }
         State state = path.peek().next(ball, dir);
         if (state != path.peek()) {
-            if (state.getWin()) {
-                System.out.println("You Won!");
-                interactive = false;
-                System.exit(0);
-            }
             path.push(state);
             updateState();
         }
