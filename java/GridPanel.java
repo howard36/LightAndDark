@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-class GridPanel extends JPanel implements KeyListener {
+class GridPanel extends JPanel {
 
     public GridPanel(int numRows, int numCols) {
         JFrame frame = new JFrame();
@@ -29,9 +29,7 @@ class GridPanel extends JPanel implements KeyListener {
         }
         crossPositions = new ArrayList<Cell>();
 
-        state = null;
         setFocusable(true);
-        addKeyListener(this);
     }
 
     public void paint(Graphics g) {
@@ -117,35 +115,7 @@ class GridPanel extends JPanel implements KeyListener {
             }
         }
         crossPositions.clear();
-        state = null;
         repaint();
-    }
-
-    // methods of KeyListener
-    public void keyPressed(KeyEvent ke) {
-        if (state == null)
-            return;
-        int code = ke.getKeyCode();
-        if (48 <= code && code < 56) {
-            int command = code - 48;
-            state = state.move(command / 4, command % 4);
-            state.draw(this);
-        }
-    }
-
-    public void keyReleased(KeyEvent ke) {
-    }
-
-    public void keyTyped(KeyEvent ke) {
-    }
-
-    public void redraw() {
-        repaint();
-    }
-
-    public void setState(State state) {
-        this.state = state;
-        state.draw(this);
     }
 
     private static final long serialVersionUID = 69L;
@@ -162,7 +132,4 @@ class GridPanel extends JPanel implements KeyListener {
     private int[][][] circles;
     private int[][] centerCircles;
     private ArrayList<Cell> crossPositions;
-
-    private State state;
-
 }
