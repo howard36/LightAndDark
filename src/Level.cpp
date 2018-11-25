@@ -95,3 +95,9 @@ void level::play() const {
     b.unhash(cur).print();
     printf("You Won!\n");
 }
+
+level level::hardLevel(int maxX, int maxY, int numColors, int numBalls){
+    board b = board::randomBoard(maxX, maxY, numColors, numBalls);
+    state hardestState = b.unhash(b.getHardestState());
+    return level(hardestState);
+}

@@ -1,8 +1,10 @@
 #include "../include/Macros.h"
+#include "../include/Level.h"
 
 int main() {
-    board b = board::randomBoard(5, 5, 2, 2);
-    state s = b.randomState();
+    level l = level::hardLevel(5, 5, 2, 2);
+    printf("Playing Hard Level:\n");
+    l.play();
 
     vvb grid{
         {0, 0, 1, 1, 1},
@@ -39,5 +41,6 @@ int main() {
     state sampleState = state(&sampleBoard, ballPos, colorFlip, true);
     level sampleLevel = level(sampleState);
 
-    sampleLevel.play();
+    // printf("Playing Sample Level:\n");
+    // sampleLevel.play();
 }

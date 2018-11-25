@@ -43,4 +43,5 @@ class board {
     int move(int hash, int move) const { return adj[hash][move]; }
     vi solve(int hash) const;
     void print() const;
+    int getHardestState() const { return hardestState; }
 };
