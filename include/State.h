@@ -2,6 +2,7 @@
 
 #include <bits/stdc++.h>
 #define pi pair<int, int>
+#define ll long long
 #define x first
 #define y second
 using namespace std;
@@ -26,7 +27,9 @@ class state {
 
     bool getShade(pi p) const;
     bool occupied(pi p) const;
-    state move(int ball, int dir) const;
+    const state move(pi move) const;
     void flip(int color);
     void moveBall(int ball, pi pos);
+    int hint() const;
+    vector<int> solve() const;
 };

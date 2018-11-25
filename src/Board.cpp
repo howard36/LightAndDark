@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #define pi pair<int, int>
+#define ll long long
 #define x first
 #define y second
 using namespace std;
@@ -25,6 +26,8 @@ board::board(int _maxX,
                            button(_button),
                            target(_target),
                            maxHash((int)pow(maxX * maxY, numBalls) << numColors) {
+    initGraph();
+    analyzeGraph();
 }
 
 int board::hash(state s) const {
@@ -39,7 +42,7 @@ int board::hash(state s) const {
     return h;
 }
 
-state board::unhash(int h, bool checkValid) const {
+state board::unhash(int h, bool checkValid = true) const {
     vector<pi> ballPos(numBalls);
     vector<bool> colorFlip(numColors);
     for (int i = numColors - 1; i >= 0; i--) {
@@ -78,19 +81,55 @@ bool board::valid(state s) const {
     return true;
 }
 
-vector<vector<int>> board::getGraph() const {
-    vector<vector<int>> adj(maxHash, vector<int>(numBalls * 4));
+void board::initGraph() {
+    adj = vector<vector<int>>(maxHash, vector<int>(numBalls * 4));
+    validStates = vector<bool>(maxHash, false);
     for (int i = 0; i < maxHash; i++) {
         state s = unhash(i, false);
         if (valid(s)) {
+            validStates[i] = true;
             for (int j = 0; j < numBalls; j++) {
                 for (int k = 0; k < 4; k++) {
-                    adj[i][4 * j + k] = hash(s.move(j, k));
+                    adj[i][4 * j + k] = hash(s.move(pi(j, k)));
                 }
             }
         }
     }
-    return adj;
+}
+
+void board::analyzeGraph() {
+    paths = vector<vector<ll>>(maxHash, vector<ll>(maxHash, 0));
+    distance = vector<int>(maxHash, -1);
+    for (int i = 0; i < maxHash; i++) {
+        if (checkWin(unhash(i, false))) {
+            paths[0][i] = 1;
+            distance[i] = 0;
+        }
+    }
+    for (int i = 1; i < maxHash; i++) {
+        for (int j = 0; j < maxHash; j++) {
+            if (!validStates[j])
+                continue;
+            for (int k = 0; k < 4 * numBalls; k++) {
+                if (adj[j][k] != j) {
+                    paths[i][j] += paths[i - 1][adj[j][k]];
+                }
+            }
+            if (distance[j] == -1 && paths[i][j] > 0) {
+                distance[j] = i;
+            }
+        }
+    }
+    maxDist = -1;
+    for (int i = 0; i < maxHash; i++) {
+        if (distance[i] > maxDist) {
+            maxDist = distance[i];
+            hardestState = i;
+        }
+    }
+    cout << "The hardest state has a solution of length " << maxDist << "\n";
+    cout << "Solving hardest state:\n";
+    unhash(hardestState).solve();
 }
 
 bool board::checkWin(state s) const {
@@ -157,4 +196,67 @@ state board::randomState() {
     }
     vector<bool> colorFlip(numColors, false);
     return state(this, ballPos, colorFlip, true);
+}
+
+int board::hint(int hash) const {
+    srand(time(NULL));
+    int d = distance[hash];
+    if (d == -1) {
+        return -1;
+    }
+    else if (d == 0) {
+        return -2;
+    }
+    else {
+        vector<int> bestMoves;
+        for (int i = 0; i < 4 * numBalls; i++) {
+            if (distance[adj[hash][i]] == d - 1) {
+                bestMoves.push_back(i);
+            }
+        }
+        return bestMoves[rand() % bestMoves.size()];
+    }
+}
+
+void printMove(int move){
+    int ball = move/4, dir = move%4;
+    cout << "Move ball " << ball << " ";
+    if (dir == 0){
+        cout << "down\n";
+    }
+    else if (dir == 1){
+        cout << "right\n";
+    }
+    else if (dir == 2){
+        cout << "up\n";
+    }
+    else if (dir == 3){
+        cout << "left\n";
+    }
+    else{
+        cout << "ERROR when printing move: invalid direction\n";
+    }
+}
+
+void printSolution(vector<int> solution){
+    for (int move : solution){
+        printMove(move);
+    }
+}
+
+vector<int> board::solve(int hash) const {
+    cout << "In board::solve\n";
+    vector<int> moves;
+    if (distance[hash] == -1) {
+        cout << "Impossible to solve from this state\n";
+        return moves;
+    }
+    while (distance[hash] > 0) {
+        int bestMove = hint(hash);
+        moves.push_back(bestMove);
+        hash = adj[hash][bestMove];
+    }
+    cout << "Solution size is " << moves.size() << "\n";
+    printSolution(moves);
+    return moves;
 }

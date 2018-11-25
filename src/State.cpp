@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #define pi pair<int, int>
+#define ll long long
 #define x first
 #define y second
 using namespace std;
@@ -25,6 +26,7 @@ bool state::getShade(pi p) const {
             shade ^= colorFlip[i];
         }
     }
+    return shade;
 }
 
 bool state::occupied(pi p) const {
@@ -40,7 +42,10 @@ bool state::occupied(pi p) const {
 // dir = 2: left (negative x direction)
 // dir = 3: down (negative y direction)
 // currently copies s on function call, fix this once a copy constructor is made
-state state::move(int ball, int dir) const {
+const state state::move(pi move) const {
+    int ball = move.first, dir = move.second;
+    if (win)
+        return *this;
     pi pos = ballPos[ball]; // add if(pos == target) return s?
     bool shade = getShade(pos);
     int x = pos.x, y = pos.y;
@@ -80,7 +85,7 @@ state state::move(int ball, int dir) const {
     else {
         state s = state(*this);
         s.moveBall(ball, nextPos);
-        return s.move(ball, dir); // keep rolling in same direction
+        return s.move(pi(ball, dir)); // keep rolling in same direction
     }
 }
 
@@ -95,4 +100,12 @@ void state::moveBall(int ball, pi pos) {
     win = b->checkWin(*this);
     hash = b->hash(*this);
     win = b->checkWin(*this);
+}
+
+int state::hint() const {
+    return b->hint(hash);
+}
+
+vector<int> state::solve() const {
+    return b->solve(hash);
 }

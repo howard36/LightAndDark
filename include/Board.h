@@ -2,13 +2,21 @@
 
 #include <bits/stdc++.h>
 #define pi pair<int, int>
+#define ll long long
 #define x first
 #define y second
 using namespace std;
 
-#include "State.h"
+#include "../include/State.h"
 
 class board {
+    vector<vector<int>> adj;
+    vector<bool> validStates;
+    vector<vector<ll>> paths; // paths[i][j] = number of length i (not necessarily simple) paths from state j to winning state
+    vector<int> distance;
+    int maxDist;
+    int hardestState;
+
   public:
     const int maxX, maxY, numColors, numBalls;
     const vector<vector<bool>> grid;              // maxX x maxY grid of bools representing which squares are part of the board
@@ -27,11 +35,17 @@ class board {
           vector<vector<bool>> _initShade,
           vector<vector<int>> _button,
           pi _target);
+    const vector<vector<int>> &getAdj() const { return adj; }
+    const vector<int> &getDistance() const { return distance; }
+
     int hash(state s) const;
     state unhash(int h, bool checkValid) const;
     bool valid(state s) const;
-    vector<vector<int>> getGraph() const;
+    void initGraph();
+    void analyzeGraph();
     bool checkWin(state s) const;
     static board randomBoard(int maxX, int maxY, int numColors, int numBalls);
     state randomState();
+    int hint(int h) const;
+    vector<int> solve(int hash) const;
 };
