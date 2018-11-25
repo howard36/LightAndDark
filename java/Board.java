@@ -12,11 +12,6 @@ public class Board {
         this.colourGrid = colourGrid.clone();
         this.buttonGrid = buttonGrid.clone();
         this.target = new Cell(target);
-        initializeGridPanel();
-    }
-
-    public void play(Cell[] ballPositions) {
-        gridPanel.setState(new State(this, ballPositions));
     }
 
     // TODO: Randomly generate initShade, colourGrid, buttonGrid, target
@@ -25,7 +20,23 @@ public class Board {
         this.numCols = numCols;
         this.numBalls = numBalls;
         this.numColours = numColours;
-        initializeGridPanel();
+    }
+
+    public void draw(GridPanel gridPanel) {
+        for (int i = 0; i < numRows; ++i) {
+            for (int j = 0; j < numCols; ++j) {
+                Cell cell = new Cell(i, j);
+                gridPanel.setColour(cell, initShade[i][j]);
+                for (int c = 0; c < numColours; ++c) {
+                    if (colourGrid[c][i][j]) {
+                        gridPanel.addCircle(cell, c);
+                    }
+                }
+                if (buttonGrid[i][j] != -1)
+                    gridPanel.addCenterCircle(new Cell(i, j), buttonGrid[i][j]);
+            }
+        }
+        gridPanel.blackout(target);
     }
 
     public int getNumRows() {
@@ -60,25 +71,6 @@ public class Board {
         return buttonGrid[cell.row][cell.col];
     }
 
-    private void initializeGridPanel() {
-        gridPanel = new GridPanel(numRows, numCols);
-        for (int i = 0; i < numRows; ++i) {
-            for (int j = 0; j < numCols; ++j) {
-                Cell cell = new Cell(i, j);
-                gridPanel.setColour(cell, initShade[i][j]);
-                for (int c = 0; c < numColours; ++c) {
-                    if (colourGrid[c][i][j]) {
-                        gridPanel.addCircle(cell, c);
-                    }
-                }
-                if (buttonGrid[i][j] != -1)
-                    gridPanel.addCenterCircle(new Cell(i, j), buttonGrid[i][j]);
-            }
-        }
-        gridPanel.blackout(target);
-        gridPanel.redraw();
-    }
-
     private int numRows;
     private int numCols;
     private int numColours;
@@ -87,6 +79,4 @@ public class Board {
     private boolean[][][] colourGrid;
     private int[][] buttonGrid;
     private Cell target;
-
-    private GridPanel gridPanel;
 }

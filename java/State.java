@@ -35,7 +35,6 @@ public class State {
                 gridPanel.setColour(cell, getShade(cell));
             }
         }
-        gridPanel.repaint();
     }
 
     public State move(int ball, int dir) {

@@ -8,7 +8,9 @@ public class Main {
         Cell target = new Cell(0, 0);
         Cell[] ballPositions = { new Cell(1, 2), new Cell(0, 2) };
         Board board = new Board(3, 3, 2, 2, initShade, colourGrid, buttonGrid, target);
-        board.play(ballPositions);
+        State state = new State(board, ballPositions);
 
+        GamePlayer gamePlayer = new GamePlayer(board, state);
+        gamePlayer.play();
     }
 }
