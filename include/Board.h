@@ -35,18 +35,21 @@ class board {
           vector<vector<bool>> _initShade,
           vector<vector<int>> _button,
           pi _target);
-    const vector<vector<int>> &getAdj() const { return adj; }
-    const vector<int> &getDistance() const { return distance; }
+    // const vector<vector<int>> &getAdj() const { return adj; }
+    // const vector<int> &getDistance() const { return distance; }
 
     int hash(state s) const;
-    state unhash(int h, bool checkValid) const;
+    state unhash(int h, bool checkValid = true) const;
     bool valid(state s) const;
     void initGraph();
     void analyzeGraph();
     bool checkWin(state s) const;
+    bool checkWin(int h) const { return (distance[h] == 0); }
     static board randomBoard(int maxX, int maxY, int numColors, int numBalls);
     state randomState();
     int hint(int h) const;
+    int move(int hash, int ball, int dir) const { return adj[hash][4 * ball + dir]; }
+    int move(int hash, int move) const { return adj[hash][move]; }
     vector<int> solve(int hash) const;
     void print() const;
 };

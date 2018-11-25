@@ -31,6 +31,7 @@ class state {
     const state move(int ball, int dir) const;
     void flip(int color);
     void moveBall(int ball, pi pos);
+    void printSquareRow(int x, int y, int r) const;
     void print() const;
     int hint() const;
     vector<int> solve() const;

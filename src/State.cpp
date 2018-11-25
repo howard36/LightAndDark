@@ -106,6 +106,13 @@ void state::moveBall(int ball, pi pos) {
     win = b->checkWin(*this);
 }
 
+void state::printSquareRow(int x, int y, int r) const {
+    // if (r == 1){
+    //     if (b->colorGrid[0][x][y])
+    // }
+
+}
+
 void state::print() const {
     printf("State:\n");
     for (int i = 0; i < ballPos.size(); i++) {
