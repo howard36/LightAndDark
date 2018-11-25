@@ -12,19 +12,11 @@ public class Board {
         this.colourGrid = colourGrid.clone();
         this.buttonGrid = buttonGrid.clone();
         this.target = new Cell(target);
-        state = null;
         initializeGridPanel();
     }
 
     public void play(Cell[] ballPositions) {
-        state = new State(this, ballPositions);
-        state.draw(gridPanel);
-        gridPanel.setPlaying(true);
-    }
-
-    public void move(int command) {
-        state = state.move(command / 4, command % 4);
-        state.draw(gridPanel);
+        gridPanel.setState(new State(this, ballPositions));
     }
 
     // TODO: Randomly generate initShade, colourGrid, buttonGrid, target
@@ -69,7 +61,7 @@ public class Board {
     }
 
     private void initializeGridPanel() {
-        gridPanel = new GridPanel(this);
+        gridPanel = new GridPanel(numRows, numCols);
         for (int i = 0; i < numRows; ++i) {
             for (int j = 0; j < numCols; ++j) {
                 Cell cell = new Cell(i, j);
@@ -96,6 +88,5 @@ public class Board {
     private int[][] buttonGrid;
     private Cell target;
 
-    private State state;
     private GridPanel gridPanel;
 }

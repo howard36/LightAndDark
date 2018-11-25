@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 class GridPanel extends JPanel implements KeyListener {
 
-    public GridPanel(Board board) {
+    public GridPanel(int numRows, int numCols) {
         JFrame frame = new JFrame();
         frame.setSize(800, 800);
         frame.setLocation(100, 100);
@@ -14,9 +14,8 @@ class GridPanel extends JPanel implements KeyListener {
         frame.add(this);
         frame.setVisible(true);
 
-        this.board = board;
-        this.numRows = board.getNumRows();
-        this.numCols = board.getNumCols();
+        this.numRows = numRows;
+        this.numCols = numCols;
         bg = new int[numRows][numCols];
         circles = new int[numRows][numCols][4];
         centerCircles = new int[numRows][numCols];
@@ -29,7 +28,8 @@ class GridPanel extends JPanel implements KeyListener {
             }
         }
         crossPositions = new ArrayList<Cell>();
-        playing = false;
+
+        state = null;
         setFocusable(true);
         addKeyListener(this);
     }
@@ -107,14 +107,29 @@ class GridPanel extends JPanel implements KeyListener {
         centerCircles[c.row][c.col] = colour;
     }
 
+    public void reset() {
+        for (int i = 0; i < numRows; ++i) {
+            for (int j = 0; j < numCols; ++j) {
+                bg[i][j] = 0;
+                centerCircles[i][j] = -1;
+                for (int k = 0; k < 4; ++k)
+                    circles[i][j][k] = -1;
+            }
+        }
+        crossPositions.clear();
+        state = null;
+        repaint();
+    }
+
     // methods of KeyListener
     public void keyPressed(KeyEvent ke) {
-        int code = ke.getKeyCode();
-        if (!playing)
+        if (state == null)
             return;
+        int code = ke.getKeyCode();
         if (48 <= code && code < 56) {
             int command = code - 48;
-            board.move(command);
+            state = state.move(command / 4, command % 4);
+            state.draw(this);
         }
     }
 
@@ -124,12 +139,13 @@ class GridPanel extends JPanel implements KeyListener {
     public void keyTyped(KeyEvent ke) {
     }
 
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
-    }
-
     public void redraw() {
         repaint();
+    }
+
+    public void setState(State state) {
+        this.state = state;
+        state.draw(this);
     }
 
     private static final long serialVersionUID = 69L;
@@ -147,6 +163,6 @@ class GridPanel extends JPanel implements KeyListener {
     private int[][] centerCircles;
     private ArrayList<Cell> crossPositions;
 
-    private boolean playing;
+    private State state;
 
 }
