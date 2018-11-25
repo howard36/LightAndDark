@@ -12,13 +12,13 @@ void dfs(const state &s, vector<vector<int>> &adj, vector<bool> &visited, vector
         paths.push_back(path);
         return;
     }
-    int h = s.getHash;
+    int h = s.getHash();
     visited[h] = true;
-    for (int i = 0; i < s.b.numBalls * 4; i++) {
+    for (int i = 0; i < s.b->numBalls * 4; i++) {
         int next = adj[h][i];
         if (!visited[next]) {
             path.push_back(i);
-            dfs(s.b.unhash(next), adj, visited, paths, path);
+            dfs(s.b->unhash(next), adj, visited, paths, path);
             path.pop_back();
         }
     }
@@ -30,7 +30,7 @@ bool comp(vector<int> &a, vector<int> &b) {
 }
 
 void solve(state s) {
-    board b = s.b;
+    board b = *(s.b);
     vector<vector<int>> adj = b.getGraph();
     vector<bool> visited;
     for (int i = 0; i < b.maxHash; i++) {
