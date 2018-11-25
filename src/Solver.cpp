@@ -61,3 +61,5 @@ int main() {
     state s = b.randomState();
     solve(s);
 }
+
+// test
