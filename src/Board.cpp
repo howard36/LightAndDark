@@ -39,7 +39,7 @@ int board::hash(state s) const {
     return h;
 }
 
-state board::unhash(int h) const {
+state board::unhash(int h, bool checkValid) const {
     vector<pi> ballPos(numBalls);
     vector<bool> colorFlip(numColors);
     for (int i = numColors - 1; i >= 0; i--) {
@@ -53,7 +53,8 @@ state board::unhash(int h) const {
         h /= maxX;
         ballPos[i] = pi(x, y);
     }
-    return state(this, ballPos, colorFlip);
+    state s = state(this, ballPos, colorFlip, checkValid);
+    return s;
 }
 
 bool board::valid(state s) const {
@@ -70,16 +71,17 @@ bool board::valid(state s) const {
     }
     for (int i = 0; i < numBalls; i++) {
         for (int j = i + 1; j < numBalls; j++) {
-            if (s.getBallPos()[i] == s.getBallPos()[j])
+            if (s.getBallPos()[i] == s.getBallPos()[j] && s.getBallPos()[i] != target)
                 return false;
         }
     }
+    return true;
 }
 
 vector<vector<int>> board::getGraph() const {
     vector<vector<int>> adj(maxHash, vector<int>(numBalls * 4));
     for (int i = 0; i < maxHash; i++) {
-        state s = unhash(i);
+        state s = unhash(i, false);
         if (valid(s)) {
             for (int j = 0; j < numBalls; j++) {
                 for (int k = 0; k < 4; k++) {
@@ -140,19 +142,19 @@ state board::randomState() {
     vector<pi> squares;
     for (int i = 0; i < maxX; i++) {
         for (int j = 0; j < maxY; j++) {
-            if (button[i][j] || target == pi(i, j))
+            if (button[i][j] == -1 || target == pi(i, j))
                 continue;
             squares.push_back(pi(i, j));
         }
     }
     random_shuffle(squares.begin(), squares.end());
-    if (squares.size() < numBalls){
+    if (squares.size() < numBalls) {
         cout << "ERROR in random state generator: not enough space to place balls\n";
     }
     vector<pi> ballPos;
-    for (int i = 0; i<numBalls; i++){
+    for (int i = 0; i < numBalls; i++) {
         ballPos.push_back(squares[i]);
     }
     vector<bool> colorFlip(numColors, false);
-    return state(this, ballPos, colorFlip);
+    return state(this, ballPos, colorFlip, true);
 }

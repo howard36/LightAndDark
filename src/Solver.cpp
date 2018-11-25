@@ -18,7 +18,7 @@ void dfs(const state &s, vector<vector<int>> &adj, vector<bool> &visited, vector
         int next = adj[h][i];
         if (!visited[next]) {
             path.push_back(i);
-            dfs(s.b->unhash(next), adj, visited, paths, path);
+            dfs(s.b->unhash(next, true), adj, visited, paths, path);
             path.pop_back();
         }
     }
@@ -30,6 +30,7 @@ bool comp(vector<int> &a, vector<int> &b) {
 }
 
 void solve(state s) {
+    cout << "In solve\n";
     board b = *(s.b);
     vector<vector<int>> adj = b.getGraph();
     vector<bool> visited;
@@ -46,9 +47,9 @@ void solve(state s) {
         sort(paths.begin(), paths.end(), comp);
         cout << "The shortest solution has " << paths[0].size() << " moves\n";
         cout << paths.size() << " solutions found:\n";
-        for (int i = 0; i<paths.size(); i++){
-            cout << i+1 << ":";
-            for (int j : paths[i]){
+        for (int i = 0; i < paths.size(); i++) {
+            cout << i + 1 << ":";
+            for (int j : paths[i]) {
                 cout << " " << j;
             }
             cout << "\n";
@@ -61,5 +62,3 @@ int main() {
     state s = b.randomState();
     solve(s);
 }
-
-// test

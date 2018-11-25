@@ -63,5 +63,6 @@
         "utility": "cpp",
         "valarray": "cpp"
     },
-    "editor.detectIndentation": false
+    "editor.detectIndentation": false,
+    "C_Cpp.clang_format_fallbackStyle": "{BasedOnStyle: LLVM, AllowShortBlocksOnASingleLine: true, AllowShortCaseLabelsOnASingleLine: true, AllowShortFunctionsOnASingleLine: true, AllowShortIfStatementsOnASingleLine: false, AllowShortLoopsOnASingleLine: true, BreakBeforeBraces: Custom, BraceWrapping: {AfterClass: false, AfterControlStatement: false, AfterFunction: false, AfterStruct: false, BeforeElse: true}, ColumnLimit: 0, IndentCaseLabels: true, IndentWidth: 4, TabWidth: 4, UseTab: Never}"
 }
