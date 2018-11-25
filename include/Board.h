@@ -29,6 +29,7 @@ class board {
           vvi _button,
           pi _target);
 
+    const vi &getDistance() const { return distance; }
     int hash(state s) const;
     state unhash(int h, bool checkValid = true) const;
     bool valid(state s) const;
