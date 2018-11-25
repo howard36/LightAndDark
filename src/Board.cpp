@@ -88,7 +88,7 @@ void board::initGraph() {
         state s = unhash(i, false);
         if (valid(s)) {
             validStates[i] = true;
-            for (int j = 0; j < 4*numBalls; j++) {
+            for (int j = 0; j < 4 * numBalls; j++) {
                 adj[i][j] = hash(s.move(j));
             }
         }
@@ -216,28 +216,28 @@ int board::hint(int hash) const {
     }
 }
 
-void printMove(int move){
-    int ball = move/4, dir = move%4;
+void printMove(int move) {
+    int ball = move / 4, dir = move % 4;
     cout << "Move ball " << ball << " ";
-    if (dir == 0){
+    if (dir == 0) {
         cout << "down\n";
     }
-    else if (dir == 1){
+    else if (dir == 1) {
         cout << "right\n";
     }
-    else if (dir == 2){
+    else if (dir == 2) {
         cout << "up\n";
     }
-    else if (dir == 3){
+    else if (dir == 3) {
         cout << "left\n";
     }
-    else{
+    else {
         cout << "ERROR when printing move: invalid direction\n";
     }
 }
 
-void printSolution(vector<int> solution){
-    for (int move : solution){
+void printSolution(vector<int> solution) {
+    for (int move : solution) {
         printMove(move);
     }
 }
@@ -255,7 +255,39 @@ vector<int> board::solve(int hash) const {
         hash = adj[hash][bestMove];
         // unhash(hash).print();
     }
-    // cout << "Solution size is " << moves.size() << "\n";
-    // printSolution(moves);
+    cout << "Solution size is " << moves.size() << "\n";
+    printSolution(moves);
     return moves;
+}
+
+void print2dVector(vector<vector<int>> v){
+    for (int i = 0; i<v.size(); i++){
+        for (int j = 0; j<v[0].size(); j++){
+            printf("%d ", v[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void print2dVector(vector<vector<bool>> v){
+    for (int i = 0; i<v.size(); i++){
+        for (int j = 0; j<v[0].size(); j++){
+            printf("%d ", (int)v[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void board::print() const {
+    printf("Target: (%d, %d)\n", target.x, target.y);
+    printf("Grid:\n");
+    print2dVector(grid);
+    for (int i = 0; i<numColors; i++){
+        printf("ColorGrid[%d]:\n", i);
+        print2dVector(colorGrid[i]);
+    }
+    // printf("InitShade:\n");
+    // print2dVector(initShade);
+    printf("Button:\n");
+    print2dVector(button);
 }
