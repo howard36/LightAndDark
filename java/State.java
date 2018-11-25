@@ -81,6 +81,14 @@ public class State {
         return win;
     }
 
+    public Cell getBallPos(int ball) {
+        return new Cell(ballPositions[ball]);
+    }
+
+    public int getColourFlip(int colour) {
+        return colourFlip[colour];
+    }
+
     private int getShade(Cell c) {
         int shade = board.getInitShade(c);
         for (int i = 0; i < board.getNumColours(); ++i) {
@@ -122,4 +130,6 @@ public class State {
     private int[] colourFlip;
     private Cell[] ballPositions;
     private boolean win;
+
+    private State[] edges;
 }
