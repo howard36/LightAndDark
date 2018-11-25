@@ -4,8 +4,8 @@
 #define y second
 using namespace std;
 
-#include "Board.h"
-#include "State.h"
+#include "../include/Board.h"
+#include "../include/State.h"
 
 void dfs(const state &s, vector<vector<int>> &adj, vector<bool> &visited, vector<vector<int>> &paths, vector<int> &path) {
     if (s.getWin()) { // found a new solution
