@@ -13,6 +13,7 @@ class GridPanel extends JPanel {
         frame.setLayout(new BorderLayout());
         frame.add(this);
         frame.setVisible(true);
+        frame.setBackground(wallpaperColour);
 
         this.numRows = numRows;
         this.numCols = numCols;
@@ -28,7 +29,6 @@ class GridPanel extends JPanel {
             }
         }
         crossPositions = new ArrayList<Cell>();
-
         setFocusable(true);
     }
 
@@ -43,26 +43,24 @@ class GridPanel extends JPanel {
                 int y = row * len + offsety;
                 g.setColor(backgroundColours[bg[row][col]]);
                 g.fillRect(x, y, len, len);
-                g.setColor(borderColour);
-                g.drawRect(x, y, len, len);
+                g.setColor(wallpaperColour);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setStroke(new BasicStroke(3));
+                g2.drawRect(x, y, len, len);
+                int delta = 6 * (len - 15) / 7;
+                x += 5;
+                y += 5;
                 for (int i = 0; i < circles[row][col].length && circles[row][col][i] != -1; ++i) {
                     g.setColor(accentColours[circles[row][col][i]]);
-                    g.fillOval(x, y, len / 5, len / 5);
+                    g.fillOval(x, y, len / 7, len / 7);
                     if (i == 0)
-                        x += 2 * len / 3;
+                        x += delta;
                     else if (i == 1)
-                        y += 2 * len / 3;
+                        y += delta;
                     else if (i == 2)
-                        x -= 2 * len / 3;
+                        x -= delta;
                     else
-                        y -= 2 * len / 3;
-                }
-                if (centerCircles[row][col] != -1) {
-                    x = col * len + offsetx;
-                    y = row * len + offsety;
-                    g.setColor(accentColours[centerCircles[row][col]]);
-                    // radius is len/2
-                    g.fillOval(x + len / 3, y + len / 3, len / 3, len / 3);
+                        y -= delta;
                 }
             }
         }
@@ -70,8 +68,21 @@ class GridPanel extends JPanel {
             g.setColor(crossColours[i]);
             int x = crossPositions.get(i).col * len + offsetx;
             int y = crossPositions.get(i).row * len + offsety;
-            g.drawLine(x, y, x + len, y + len);
-            g.drawLine(x + len, y, x, y + len);
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setStroke(new BasicStroke(3));
+            g2.drawLine(x + len / 4, y + len / 4, x + 3 * len / 4, y + 3 * len / 4);
+            g2.drawLine(x + 3 * len / 4, y + len / 4, x + len / 4, y + 3 * len / 4);
+        }
+        for (int row = 0; row < numRows; ++row) {
+            for (int col = 0; col < numCols; ++col) {
+                if (centerCircles[row][col] != -1) {
+                    int x = col * len + offsetx;
+                    int y = row * len + offsety;
+                    g.setColor(accentColours[centerCircles[row][col]]);
+                    // radius is len/2
+                    g.fillOval(x + 2 * len / 5, y + 2 * len / 5, len / 5, len / 5);
+                }
+            }
         }
     }
 
@@ -91,6 +102,10 @@ class GridPanel extends JPanel {
 
     public void blackout(Cell c) {
         bg[c.row][c.col] = 2;
+    }
+
+    public void fadeOut(Cell c) {
+        bg[c.row][c.col] = 3;
     }
 
     public void eraseX() {
@@ -123,10 +138,12 @@ class GridPanel extends JPanel {
     private int numRows;
     private int numCols;
 
-    private static final Color[] backgroundColours = { Color.white, Color.gray, Color.black };
-    private static final Color[] accentColours = { Color.red, Color.blue, Color.green };
-    private static final Color borderColour = Color.magenta;
-    private static final Color[] crossColours = { Color.black, Color.green };
+    private static final Color wallpaperColour = new Color(198, 236, 174);
+    private static final Color targetColour = new Color(23, 190, 187);
+    private static final Color[] backgroundColours = { new Color(45, 48, 71), new Color(255, 219, 181), targetColour,
+            wallpaperColour };
+    private static final Color[] accentColours = { new Color(254, 95, 85), new Color(119, 125, 167), Color.green };
+    private static final Color[] crossColours = { new Color(136, 80, 83), new Color(148, 201, 169) };
 
     private int[][] bg;
     private int[][][] circles;
