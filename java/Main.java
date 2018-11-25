@@ -11,6 +11,6 @@ public class Main {
         State state = new State(board, ballPositions);
 
         GamePlayer gamePlayer = new GamePlayer(board, state);
-        gamePlayer.play();
+        gamePlayer.playInteractively();
     }
 }

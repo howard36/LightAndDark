@@ -8,7 +8,7 @@ public class GamePlayer implements KeyListener {
         gridPanel.addKeyListener(this);
     }
 
-    public void play() {
+    public void playInteractively() {
         board.draw(gridPanel);
         state.draw(gridPanel);
         gridPanel.repaint();

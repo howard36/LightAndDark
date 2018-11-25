@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class Board {
 
     public Board(int numRows, int numCols, int numBalls, int numColours, int[][] initShade, boolean[][][] colourGrid,
