@@ -29,7 +29,6 @@ class GridPanel extends JPanel {
         }
         crossPositions = new ArrayList<Cell>();
 
-        state = null;
         setFocusable(true);
     }
 
@@ -116,13 +115,7 @@ class GridPanel extends JPanel {
             }
         }
         crossPositions.clear();
-        state = null;
         repaint();
-    }
-
-    public void setState(State state) {
-        this.state = state;
-        state.draw(this);
     }
 
     private static final long serialVersionUID = 69L;
@@ -139,7 +132,4 @@ class GridPanel extends JPanel {
     private int[][][] circles;
     private int[][] centerCircles;
     private ArrayList<Cell> crossPositions;
-
-    private State state;
-
 }
