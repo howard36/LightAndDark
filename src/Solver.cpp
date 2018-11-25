@@ -7,9 +7,13 @@ using namespace std;
 #include "../include/Board.h"
 #include "../include/State.h"
 
+int solutions = 0;
+
 void dfs(const state &s, vector<vector<int>> &adj, vector<bool> &visited, vector<vector<int>> &paths, vector<int> &path) {
     if (s.getWin()) { // found a new solution
         paths.push_back(path);
+        solutions++;
+        cout << "Found solution " << solutions << "\n";
         return;
     }
     int h = s.getHash();
@@ -58,7 +62,40 @@ void solve(state s) {
 }
 
 int main() {
-    board b = board::randomBoard(5, 5, 2, 2);
+    board b = board::randomBoard(4, 4, 0, 1);
     state s = b.randomState();
+    vector<vector<bool>> grid{
+        {0, 0, 1, 1, 1},
+        {0, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 0},
+        {1, 1, 1, 0, 0}};
+    vector<vector<vector<bool>>> colorGrid{
+        {{0, 0, 0, 1, 0},
+         {0, 0, 0, 0, 1},
+         {0, 1, 0, 0, 1},
+         {0, 0, 0, 0, 0},
+         {0, 0, 0, 0, 0}},
+        {{0, 0, 0, 1, 0},
+         {0, 0, 1, 0, 0},
+         {0, 0, 0, 1, 0},
+         {1, 0, 0, 0, 0},
+         {0, 1, 1, 0, 0}}};
+    vector<vector<bool>> initShade{
+        {0, 0, 1, 0, 1},
+        {0, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1},
+        {1, 1, 0, 1, 0},
+        {1, 0, 0, 0, 0}};
+    vector<vector<int>> button{
+        {-1, -1, 0, -1, -1},
+        {-1, -1, -1, -1, -1},
+        {1, -1, -1, -1, 1},
+        {-1, -1, -1, -1, -1},
+        {-1, -1, 0, -1, -1}};
+    board sampleBoard = board(5, 5, 2, 2, grid, colorGrid, initShade, button, pi(2, 2));
+    vector<pi> ballPos{pi(4, 0), pi(0, 4)};
+    vector<bool> colorFlip{0, 0};
+    state sampleState = state(&sampleBoard, ballPos, colorFlip, true);
     solve(s);
 }

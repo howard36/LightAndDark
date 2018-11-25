@@ -142,7 +142,7 @@ state board::randomState() {
     vector<pi> squares;
     for (int i = 0; i < maxX; i++) {
         for (int j = 0; j < maxY; j++) {
-            if (button[i][j] == -1 || target == pi(i, j))
+            if (button[i][j] != -1 || target == pi(i, j))
                 continue;
             squares.push_back(pi(i, j));
         }
