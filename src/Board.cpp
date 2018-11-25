@@ -88,10 +88,8 @@ void board::initGraph() {
         state s = unhash(i, false);
         if (valid(s)) {
             validStates[i] = true;
-            for (int j = 0; j < numBalls; j++) {
-                for (int k = 0; k < 4; k++) {
-                    adj[i][4 * j + k] = hash(s.move(pi(j, k)));
-                }
+            for (int j = 0; j < 4*numBalls; j++) {
+                adj[i][j] = hash(s.move(j));
             }
         }
     }
@@ -128,7 +126,7 @@ void board::analyzeGraph() {
         }
     }
     cout << "The hardest state has a solution of length " << maxDist << "\n";
-    cout << "Solving hardest state:\n";
+    cout << "This is the hardest state:\n";
     unhash(hardestState).solve();
 }
 
@@ -245,7 +243,6 @@ void printSolution(vector<int> solution){
 }
 
 vector<int> board::solve(int hash) const {
-    cout << "In board::solve\n";
     vector<int> moves;
     if (distance[hash] == -1) {
         cout << "Impossible to solve from this state\n";
@@ -253,10 +250,12 @@ vector<int> board::solve(int hash) const {
     }
     while (distance[hash] > 0) {
         int bestMove = hint(hash);
+        // printMove(bestMove);
         moves.push_back(bestMove);
         hash = adj[hash][bestMove];
+        // unhash(hash).print();
     }
-    cout << "Solution size is " << moves.size() << "\n";
-    printSolution(moves);
+    // cout << "Solution size is " << moves.size() << "\n";
+    // printSolution(moves);
     return moves;
 }

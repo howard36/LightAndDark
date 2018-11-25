@@ -99,5 +99,7 @@ int main() {
     vector<bool> colorFlip{0, 0};
     state sampleState = state(&sampleBoard, ballPos, colorFlip, true);
     s.solve();
+    printf("----------------------------------------------------------------------------\n");
+    printf("Sample State:\n");
     sampleState.solve();
 }

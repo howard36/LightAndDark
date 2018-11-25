@@ -27,9 +27,11 @@ class state {
 
     bool getShade(pi p) const;
     bool occupied(pi p) const;
-    const state move(pi move) const;
+    const state move(int m) const;
+    const state move(int ball, int dir) const;
     void flip(int color);
     void moveBall(int ball, pi pos);
+    void print() const;
     int hint() const;
     vector<int> solve() const;
 };

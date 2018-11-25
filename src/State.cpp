@@ -42,11 +42,12 @@ bool state::occupied(pi p) const {
 // dir = 2: left (negative x direction)
 // dir = 3: down (negative y direction)
 // currently copies s on function call, fix this once a copy constructor is made
-const state state::move(pi move) const {
-    int ball = move.first, dir = move.second;
+const state state::move(int ball, int dir) const {
     if (win)
         return *this;
-    pi pos = ballPos[ball]; // add if(pos == target) return s?
+    pi pos = ballPos[ball];
+    if (pos == b->target)
+        return *this;
     bool shade = getShade(pos);
     int x = pos.x, y = pos.y;
     if (dir == 0) {
@@ -80,13 +81,17 @@ const state state::move(pi move) const {
         state s = state(*this);
         s.moveBall(ball, nextPos);
         s.flip(b->button[x][y]);
-        return *this;
+        return s;
     }
     else {
         state s = state(*this);
         s.moveBall(ball, nextPos);
-        return s.move(pi(ball, dir)); // keep rolling in same direction
+        return s.move(ball, dir); // keep rolling in same direction
     }
+}
+
+const state state::move(int m) const {
+    return move(m / 4, m % 4);
 }
 
 void state::flip(int color) {
@@ -97,9 +102,20 @@ void state::flip(int color) {
 
 void state::moveBall(int ball, pi pos) {
     ballPos[ball] = pos;
-    win = b->checkWin(*this);
     hash = b->hash(*this);
     win = b->checkWin(*this);
+}
+
+void state::print() const {
+    for (int i = 0; i < ballPos.size(); i++) {
+        printf("Ball %d is at (%d, %d)\n", i, ballPos[i].x, ballPos[i].y);
+    }
+    for (int i = 0; i < b->maxX; i++) {
+        for (int j = 0; j < b->maxY; j++) {
+            printf("%d ", (int)getShade(pi(i, j)));
+        }
+        printf("\n");
+    }
 }
 
 int state::hint() const {
@@ -107,5 +123,6 @@ int state::hint() const {
 }
 
 vector<int> state::solve() const {
+    print();
     return b->solve(hash);
 }
