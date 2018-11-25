@@ -98,3 +98,61 @@ bool board::checkWin(state s) const {
 	}
 	return true;
 }
+
+board board::randomBoard(int maxX, int maxY, int numColors, int numBalls) {
+	srand(time(NULL));
+	vector<vector<bool>> grid(maxX, vector<bool>(maxY, true));
+	vector<vector<vector<bool>>> colorGrid(numColors, vector<vector<bool>>(maxX, vector<bool>(maxY, false)));
+	for (int i = 0; i < numColors; i++) {
+		for (int j = 0; j < maxX; j++) {
+			for (int k = 0; k < maxY; k++) {
+				colorGrid[i][j][k] = (bool)(rand() % 3 == 0); // each color covers around 1/3 of the board
+			}
+		}
+	}
+	vector<vector<bool>> initShade(maxX, vector<bool>(maxY, false));
+	for (int i = 0; i < maxX; i++) {
+		for (int j = 0; j < maxY; j++) {
+			initShade[i][j] = (bool)(rand() % 2); // equal amounts of light and dark
+		}
+	}
+	vector<vector<int>> button(maxX, vector<int>(maxY, -1));
+	vector<pi> squares;
+	for (int i = 0; i < maxX; i++) {
+		for (int j = 0; j < maxY; j++) {
+			squares.push_back(pi(i, j));
+		}
+	}
+	random_shuffle(squares.begin(), squares.end());
+	pi target = squares[0];
+	for (int i = 0; i < numColors; i++) {
+		button[squares[i + 1].x][squares[i + 1].y] = i;
+	}
+	int extra = rand() % ((maxX * maxY - numColors - numBalls - 1) / 10);
+	for (int i = 0; i < extra; i++) {
+		button[squares[i + numColors + 1].x][squares[i + numColors + 1].y] = rand() % numColors;
+	}
+	return board(maxX, maxY, numColors, numBalls, grid, colorGrid, initShade, button, target);
+}
+
+state board::randomState() {
+    srand(time(NULL));
+	vector<pi> squares;
+	for (int i = 0; i < maxX; i++) {
+		for (int j = 0; j < maxY; j++) {
+			if (button[i][j] || target == pi(i, j))
+				continue;
+			squares.push_back(pi(i, j));
+		}
+	}
+	random_shuffle(squares.begin(), squares.end());
+    if (squares.size() < numBalls){
+        cout << "ERROR in random state generator: not enough space to place balls\n";
+    }
+    vector<pi> ballPos;
+    for (int i = 0; i<numBalls; i++){
+        ballPos.push_back(squares[i]);
+    }
+    vector<bool> colorFlip(numColors, false);
+    return state(*this, ballPos, colorFlip);
+}

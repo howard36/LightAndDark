@@ -38,6 +38,7 @@ void solve(state s) {
 }
 
 int main() {
-	state s;
+	board b = board::randomBoard(5, 5, 2, 2);
+    state s = b.randomState();
 	solve(s);
 }
