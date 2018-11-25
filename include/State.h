@@ -18,7 +18,7 @@ class state {
   public:
 	const board *b;
 
-	state(board *_b, vector<pi> _ballPos, vector<bool> _colorFlip);
+	state(const board *_b, vector<pi> _ballPos, vector<bool> _colorFlip);
 	vector<pi> getBallPos() const { return ballPos; }
 	vector<bool> getColorFlip() const { return colorFlip; }
 	int getHash() const { return hash; }

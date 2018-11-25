@@ -53,7 +53,7 @@ state board::unhash(int h) const {
         h /= maxX;
         ballPos[i] = pi(x, y);
     }
-    return state(*this, ballPos, colorFlip);
+    return state(this, ballPos, colorFlip);
 }
 
 bool board::valid(state s) const {
@@ -154,5 +154,5 @@ state board::randomState() {
         ballPos.push_back(squares[i]);
     }
     vector<bool> colorFlip(numColors, false);
-    return state(*this, ballPos, colorFlip);
+    return state(this, ballPos, colorFlip);
 }
