@@ -1,21 +1,13 @@
-#include <bits/stdc++.h>
-#define pi pair<int, int>
-#define ll long long
-#define x first
-#define y second
-using namespace std;
-
-#include "../include/Board.h"
-#include "../include/State.h"
+#include "../include/Macros.h"
 
 board::board(int _maxX,
              int _maxY,
              int _numColors,
              int _numBalls,
-             vector<vector<bool>> _grid,
-             vector<vector<vector<bool>>> _colorGrid,
-             vector<vector<bool>> _initShade,
-             vector<vector<int>> _button,
+             vvb _grid,
+             vvvb _colorGrid,
+             vvb _initShade,
+             vvi _button,
              pi _target) : maxX(_maxX),
                            maxY(_maxY),
                            numColors(_numColors),
@@ -43,8 +35,8 @@ int board::hash(state s) const {
 }
 
 state board::unhash(int h, bool checkValid) const {
-    vector<pi> ballPos(numBalls);
-    vector<bool> colorFlip(numColors);
+    vpi ballPos(numBalls);
+    vb colorFlip(numColors);
     for (int i = numColors - 1; i >= 0; i--) {
         colorFlip[i] = (bool)(h % 2);
         h /= 2;
@@ -82,8 +74,8 @@ bool board::valid(state s) const {
 }
 
 void board::initGraph() {
-    adj = vector<vector<int>>(maxHash, vector<int>(numBalls * 4));
-    validStates = vector<bool>(maxHash, false);
+    adj = vvi(maxHash, vi(numBalls * 4));
+    validStates = vb(maxHash, false);
     for (int i = 0; i < maxHash; i++) {
         state s = unhash(i, false);
         if (valid(s)) {
@@ -96,8 +88,8 @@ void board::initGraph() {
 }
 
 void board::analyzeGraph() {
-    paths = vector<vector<ll>>(maxHash, vector<ll>(maxHash, 0));
-    distance = vector<int>(maxHash, -1);
+    paths = vvll(maxHash, vll(maxHash, 0));
+    distance = vi(maxHash, -1);
     for (int i = 0; i < maxHash; i++) {
         if (checkWin(unhash(i, false))) {
             paths[0][i] = 1;
@@ -140,8 +132,8 @@ bool board::checkWin(state s) const {
 
 board board::randomBoard(int maxX, int maxY, int numColors, int numBalls) {
     srand(time(NULL));
-    vector<vector<bool>> grid(maxX, vector<bool>(maxY, true));
-    vector<vector<vector<bool>>> colorGrid(numColors, vector<vector<bool>>(maxX, vector<bool>(maxY, false)));
+    vvb grid(maxX, vb(maxY, true));
+    vvvb colorGrid(numColors, vvb(maxX, vb(maxY, false)));
     for (int i = 0; i < numColors; i++) {
         for (int j = 0; j < maxX; j++) {
             for (int k = 0; k < maxY; k++) {
@@ -149,14 +141,14 @@ board board::randomBoard(int maxX, int maxY, int numColors, int numBalls) {
             }
         }
     }
-    vector<vector<bool>> initShade(maxX, vector<bool>(maxY, false));
+    vvb initShade(maxX, vb(maxY, false));
     for (int i = 0; i < maxX; i++) {
         for (int j = 0; j < maxY; j++) {
             initShade[i][j] = (bool)(rand() % 2); // equal amounts of light and dark
         }
     }
-    vector<vector<int>> button(maxX, vector<int>(maxY, -1));
-    vector<pi> squares;
+    vvi button(maxX, vi(maxY, -1));
+    vpi squares;
     for (int i = 0; i < maxX; i++) {
         for (int j = 0; j < maxY; j++) {
             squares.push_back(pi(i, j));
@@ -167,7 +159,13 @@ board board::randomBoard(int maxX, int maxY, int numColors, int numBalls) {
     for (int i = 0; i < numColors; i++) {
         button[squares[i + 1].x][squares[i + 1].y] = i;
     }
-    int extra = rand() % ((maxX * maxY - numColors - numBalls - 1) / 10);
+    int inGrid = 0;
+    for (int i = 0; i<maxX; i++){
+        for (int j = 0; j<maxY; j++){
+            inGrid += (int)grid[i][j];
+        }
+    }
+    int extra = rand() % ((inGrid - numColors - numBalls - 1) / 5);
     for (int i = 0; i < extra; i++) {
         button[squares[i + numColors + 1].x][squares[i + numColors + 1].y] = rand() % numColors;
     }
@@ -176,7 +174,7 @@ board board::randomBoard(int maxX, int maxY, int numColors, int numBalls) {
 
 state board::randomState() {
     srand(time(NULL));
-    vector<pi> squares;
+    vpi squares;
     for (int i = 0; i < maxX; i++) {
         for (int j = 0; j < maxY; j++) {
             if (button[i][j] != -1 || target == pi(i, j))
@@ -188,11 +186,11 @@ state board::randomState() {
     if (squares.size() < numBalls) {
         cout << "ERROR in random state generator: not enough space to place balls\n";
     }
-    vector<pi> ballPos;
+    vpi ballPos;
     for (int i = 0; i < numBalls; i++) {
         ballPos.push_back(squares[i]);
     }
-    vector<bool> colorFlip(numColors, false);
+    vb colorFlip(numColors, false);
     return state(this, ballPos, colorFlip, true);
 }
 
@@ -206,7 +204,7 @@ int board::hint(int hash) const {
         return -2;
     }
     else {
-        vector<int> bestMoves;
+        vi bestMoves;
         for (int i = 0; i < 4 * numBalls; i++) {
             if (distance[adj[hash][i]] == d - 1) {
                 bestMoves.push_back(i);
@@ -216,78 +214,18 @@ int board::hint(int hash) const {
     }
 }
 
-void printMove(int move) {
-    int ball = move / 4, dir = move % 4;
-    cout << "Move ball " << ball << " ";
-    if (dir == 0) {
-        cout << "down\n";
-    }
-    else if (dir == 1) {
-        cout << "right\n";
-    }
-    else if (dir == 2) {
-        cout << "up\n";
-    }
-    else if (dir == 3) {
-        cout << "left\n";
-    }
-    else {
-        cout << "ERROR when printing move: invalid direction\n";
-    }
-}
-
-void printSolution(vector<int> solution) {
-    for (int move : solution) {
-        printMove(move);
-    }
-}
-
-vector<int> board::solve(int hash) const {
-    vector<int> moves;
+vi board::solve(int hash) const {
+    vi moves;
     if (distance[hash] == -1) {
         cout << "Impossible to solve from this state\n";
         return moves;
     }
     while (distance[hash] > 0) {
         int bestMove = hint(hash);
-        // printMove(bestMove);
         moves.push_back(bestMove);
         hash = adj[hash][bestMove];
-        // unhash(hash).print();
     }
     cout << "Solution size is " << moves.size() << "\n";
     printSolution(moves);
     return moves;
-}
-
-void print2dVector(vector<vector<int>> v){
-    for (int i = 0; i<v.size(); i++){
-        for (int j = 0; j<v[0].size(); j++){
-            printf("%d ", v[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-void print2dVector(vector<vector<bool>> v){
-    for (int i = 0; i<v.size(); i++){
-        for (int j = 0; j<v[0].size(); j++){
-            printf("%d ", (int)v[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-void board::print() const {
-    printf("Target: (%d, %d)\n", target.x, target.y);
-    printf("Grid:\n");
-    print2dVector(grid);
-    for (int i = 0; i<numColors; i++){
-        printf("ColorGrid[%d]:\n", i);
-        print2dVector(colorGrid[i]);
-    }
-    // printf("InitShade:\n");
-    // print2dVector(initShade);
-    printf("Button:\n");
-    print2dVector(button);
 }
