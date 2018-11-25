@@ -107,6 +107,7 @@ void state::moveBall(int ball, pi pos) {
 }
 
 void state::print() const {
+    printf("State:\n");
     for (int i = 0; i < ballPos.size(); i++) {
         printf("Ball %d is at (%d, %d)\n", i, ballPos[i].x, ballPos[i].y);
     }
@@ -123,6 +124,7 @@ int state::hint() const {
 }
 
 vector<int> state::solve() const {
+    printf("Solving the following state:\n");
     print();
     return b->solve(hash);
 }
