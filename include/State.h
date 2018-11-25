@@ -19,6 +19,7 @@ class state {
   public:
     const board *b; // constant pointer does not ensure board is constant
 
+    state();
     state(const board *_b, vector<pi> _ballPos, vector<bool> _colorFlip, bool checkValid);
     vector<pi> getBallPos() const { return ballPos; }
     vector<bool> getColorFlip() const { return colorFlip; }
@@ -26,11 +27,15 @@ class state {
     bool getWin() const { return win; }
 
     bool getShade(pi p) const;
-    bool occupied(pi p) const;
+    int occupied(pi pos) const;
     const state move(int m) const;
     const state move(int ball, int dir) const;
     void flip(int color);
     void moveBall(int ball, pi pos);
+    void printSquareRow(int x, int y, int r) const;
+    void printCorner(int x, int y) const;
+    void printHorizontalEdge(int x, int y) const;
+    void printVerticalEdge(int x, int y) const;
     void print() const;
     int hint() const;
     vector<int> solve() const;

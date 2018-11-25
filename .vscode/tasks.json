@@ -16,6 +16,7 @@
                 "\"${fileBasename}\"",
                 "State.cpp",
                 "Board.cpp",
+                "Level.cpp",
                 "-o",
                 "\"${fileBasenameNoExtension}.exe\"",
                 "&&",

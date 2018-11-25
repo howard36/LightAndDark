@@ -42,7 +42,7 @@ int board::hash(state s) const {
     return h;
 }
 
-state board::unhash(int h, bool checkValid = true) const {
+state board::unhash(int h, bool checkValid) const {
     vector<pi> ballPos(numBalls);
     vector<bool> colorFlip(numColors);
     for (int i = numColors - 1; i >= 0; i--) {
