@@ -41,12 +41,20 @@ void play(state initState) {
         bool requestMove = true;
         while (requestMove) {
             printf("Enter your move: ");
-            cin >> ball >> dir;
+            cin >> ball;
             if (ball == -1) {
                 int hint = b.hint(cur);
                 printf("Hint: ");
-                printMove2(hint);
-                requestMove = true;
+                if (hint == -1) {
+                    printf("The current state is impossible to solve, you should restart\n");
+                }
+                else if (hint == -2) {
+                    printf("ERROR in play: hint = -2, but current position is not winning\n");
+                }
+                else {
+                    printMove2(hint);
+                    requestMove = true;
+                }
             }
             else if (ball == -2) { // undo move
                 if (history.size() == 1) {
@@ -56,30 +64,41 @@ void play(state initState) {
                 else {
                     printf("You undid your last move\n");
                     history.pop_back();
-                    cur = history[history.size()-1];
+                    cur = history[history.size() - 1];
                     requestMove = false;
                 }
             }
             else if (ball == -3) { // reset to initial state
                 cur = initState.getHash();
-                requestMove = false;
-            }
-            else if (ball >= 0 && ball < b.numBalls && dir >= 0 && dir < 4) {
-                cur = b.move(cur, ball, dir);
+                history.clear();
                 history.push_back(cur);
                 requestMove = false;
             }
+            else if (ball >= 0 && ball < b.numBalls && dir >= 0 && dir < 4) {
+                cin >> dir;
+                cur = b.move(cur, ball, dir);
+                if (cur == history[history.size() - 1]) { // move had no effect
+                    printf("Invalid Move! (move had no effect)\n");
+                    requestMove = true;
+                }
+                else {
+                    history.push_back(cur);
+                    requestMove = false;
+                }
+            }
             else { // invalid move
+                printf("Invalid Move!\n");
                 requestMove = true;
             }
         }
     }
+    b.unhash(cur).print();
     printf("You Won!\n");
 }
 
 int main() {
     board b = board::randomBoard(5, 5, 2, 2);
-    b.print();
+    // b.print();
     state s = b.randomState();
     vector<vector<bool>> grid{
         {0, 0, 1, 1, 1},
