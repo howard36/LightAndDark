@@ -102,6 +102,7 @@ public class State {
 
     private void moveBall(int ball, Cell pos) {
         ballPositions[ball] = new Cell(pos);
+        win = computeWin();
     }
 
     private void flip(int colour) {
