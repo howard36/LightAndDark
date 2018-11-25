@@ -1,28 +1,21 @@
 #pragma once
 
-#include <bits/stdc++.h>
-#define pi pair<int, int>
-#define ll long long
-#define x first
-#define y second
-using namespace std;
-
-#include "Board.h"
+#include "../include/Macros.h"
 
 class board;
 
 class state {
-    vector<pi> ballPos;     // position of each ball
-    vector<bool> colorFlip; // whether each color has been flipped from initial shade or not
+    vpi ballPos;  // position of each ball
+    vb colorFlip; // whether each color has been flipped from initial shade or not
     int hash;
     bool win; // whether the state is a winning state (all balls in target)
   public:
     const board *b; // constant pointer does not ensure board is constant
 
     state();
-    state(const board *_b, vector<pi> _ballPos, vector<bool> _colorFlip, bool checkValid);
-    vector<pi> getBallPos() const { return ballPos; }
-    vector<bool> getColorFlip() const { return colorFlip; }
+    state(const board *_b, vpi _ballPos, vb _colorFlip, bool checkValid);
+    vpi getBallPos() const { return ballPos; }
+    vb getColorFlip() const { return colorFlip; }
     int getHash() const { return hash; }
     bool getWin() const { return win; }
 
@@ -38,5 +31,5 @@ class state {
     void printVerticalEdge(int x, int y) const;
     void print() const;
     int hint() const;
-    vector<int> solve() const;
+    vi solve() const;
 };

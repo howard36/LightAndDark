@@ -17,6 +17,7 @@
                 "State.cpp",
                 "Board.cpp",
                 "Level.cpp",
+                "Print.cpp",
                 "-o",
                 "\"${fileBasenameNoExtension}.exe\"",
                 "&&",

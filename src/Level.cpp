@@ -1,6 +1,4 @@
-#include "../include/Level.h"
-#include "../include/Board.h"
-#include "../include/State.h"
+#include "../include/Macros.h"
 
 level::level(state _s) : initState(_s), b(*(_s.b)) {
 }
@@ -27,7 +25,7 @@ void printMove2(int move) {
 
 void level::play() const {
     int cur = initState.getHash();
-    vector<int> history;
+    vi history;
     history.push_back(cur);
     int ball, dir;
     while (!b.checkWin(cur)) {
@@ -70,24 +68,36 @@ void level::play() const {
                 history.push_back(cur);
                 requestMove = false;
             }
-            else if (ball >= 0 && ball < b.numBalls && dir >= 0 && dir < 4) {
+            else if (ball >= 0 && ball < b.numBalls) {
                 cin >> dir;
-                cur = b.move(cur, ball, dir);
-                if (cur == history[history.size() - 1]) { // move had no effect
-                    printf("Invalid Move! (move had no effect)\n");
-                    requestMove = true;
+                if (dir >= 0 && dir < 4) {
+                    cur = b.move(cur, ball, dir);
+                    if (cur == history[history.size() - 1]) { // move had no effect
+                        printf("Invalid Move! (move had no effect)\n");
+                        requestMove = true;
+                    }
+                    else {
+                        history.push_back(cur);
+                        requestMove = false;
+                    }
                 }
-                else {
-                    history.push_back(cur);
-                    requestMove = false;
+                else { // invalid move
+                    printf("Invalid Move! dir = %d\n", dir);
+                    requestMove = true;
                 }
             }
             else { // invalid move
-                printf("Invalid Move!\n");
+                printf("Invalid Move! ball = %d\n", ball);
                 requestMove = true;
             }
         }
     }
     b.unhash(cur).print();
     printf("You Won!\n");
+}
+
+level level::hardLevel(int maxX, int maxY, int numColors, int numBalls){
+    board b = board::randomBoard(maxX, maxY, numColors, numBalls);
+    state hardestState = b.unhash(b.getHardestState());
+    return level(hardestState);
 }

@@ -1,24 +1,18 @@
-#include <bits/stdc++.h>
-#define pi pair<int, int>
-#define ll long long
-#define x first
-#define y second
-using namespace std;
-
-#include "../include/Board.h"
-#include "../include/State.h"
+#include "../include/Macros.h"
 #include "../include/Level.h"
 
 int main() {
-    board b = board::randomBoard(5, 5, 2, 2);
-    state s = b.randomState();
-    vector<vector<bool>> grid{
+    level l = level::hardLevel(5, 5, 2, 2);
+    printf("Playing Hard Level:\n");
+    l.play();
+
+    vvb grid{
         {0, 0, 1, 1, 1},
         {0, 1, 1, 1, 1},
         {1, 1, 1, 1, 1},
         {1, 1, 1, 1, 0},
         {1, 1, 1, 0, 0}};
-    vector<vector<vector<bool>>> colorGrid{
+    vvvb colorGrid{
         {{0, 0, 0, 1, 0},
          {0, 0, 0, 0, 1},
          {0, 1, 0, 0, 1},
@@ -29,26 +23,24 @@ int main() {
          {0, 0, 0, 1, 0},
          {1, 0, 0, 0, 0},
          {0, 1, 1, 0, 0}}};
-    vector<vector<bool>> initShade{
+    vvb initShade{
         {0, 0, 0, 1, 0},
         {0, 1, 0, 1, 0},
         {0, 1, 0, 1, 0},
         {0, 0, 1, 0, 0},
         {0, 1, 1, 0, 0}};
-    vector<vector<int>> button{
+    vvi button{
         {-1, -1, 0, -1, -1},
         {-1, -1, -1, -1, -1},
         {1, -1, -1, -1, 1},
         {-1, -1, -1, -1, -1},
         {-1, -1, 0, -1, -1}};
     board sampleBoard = board(5, 5, 2, 2, grid, colorGrid, initShade, button, pi(2, 2));
-    vector<pi> ballPos{pi(4, 0), pi(0, 4)};
-    vector<bool> colorFlip{0, 0};
+    vpi ballPos{pi(4, 0), pi(0, 4)};
+    vb colorFlip{0, 0};
     state sampleState = state(&sampleBoard, ballPos, colorFlip, true);
-    level l = level(sampleState);
-    // s.solve();
-    // printf("----------------------------------------------------------------------------\n");
-    // printf("Sample State:\n");
-    // sampleState.solve();
-    l.play();
+    level sampleLevel = level(sampleState);
+
+    // printf("Playing Sample Level:\n");
+    // sampleLevel.play();
 }
