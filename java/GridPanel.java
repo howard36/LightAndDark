@@ -6,15 +6,6 @@ import java.util.ArrayList;
 class GridPanel extends JPanel {
 
     public GridPanel(int numRows, int numCols) {
-        JFrame frame = new JFrame();
-        frame.setSize(800, 800);
-        frame.setLocation(100, 100);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
-        frame.add(this);
-        frame.setVisible(true);
-        frame.setBackground(wallpaperColour);
-
         this.numRows = numRows;
         this.numCols = numCols;
         bg = new int[numRows][numCols];
@@ -29,7 +20,15 @@ class GridPanel extends JPanel {
             }
         }
         crossPositions = new ArrayList<Cell>();
+        JFrame frame = new JFrame();
+        frame.setSize(800, 800);
+        frame.setLocation(100, 100);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+        frame.add(this);
+        frame.setBackground(wallpaperColour);
         setFocusable(true);
+        frame.setVisible(true); // Important that this appears at end
     }
 
     public void paint(Graphics g) {
@@ -47,20 +46,24 @@ class GridPanel extends JPanel {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setStroke(new BasicStroke(3));
                 g2.drawRect(x, y, len, len);
-                int delta = 6 * (len - 15) / 7;
-                x += 5;
-                y += 5;
-                for (int i = 0; i < circles[row][col].length && circles[row][col][i] != -1; ++i) {
-                    g.setColor(accentColours[circles[row][col][i]]);
-                    g.fillOval(x, y, len / 7, len / 7);
-                    if (i == 0)
-                        x += delta;
-                    else if (i == 1)
-                        y += delta;
-                    else if (i == 2)
-                        x -= delta;
-                    else
-                        y -= delta;
+
+                if (bg[row][col] < 2) {
+
+                    int delta = 6 * (len - 15) / 7;
+                    x += 5;
+                    y += 5;
+                    for (int i = 0; i < circles[row][col].length && circles[row][col][i] != -1; ++i) {
+                        g.setColor(accentColours[circles[row][col][i]]);
+                        g.fillOval(x, y, len / 7, len / 7);
+                        if (i == 0)
+                            x += delta;
+                        else if (i == 1)
+                            y += delta;
+                        else if (i == 2)
+                            x -= delta;
+                        else
+                            y -= delta;
+                    }
                 }
             }
         }

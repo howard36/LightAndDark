@@ -1,6 +1,9 @@
 import java.util.Queue;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
+import java.util.ArrayList;
 
 public class Board {
 
@@ -18,13 +21,42 @@ public class Board {
         buildGraph();
     }
 
-    // TODO: Randomly generate initShade, colourGrid, buttonGrid, target
-    // public Board(int numRows, int numCols, int numBalls, int numColours) {
-    // this.numRows = numRows;
-    // this.numCols = numCols;
-    // this.numBalls = numBalls;
-    // this.numColours = numColours;
-    // }
+    public Board(int numRows, int numCols, int numBalls, int numColours) {
+        Random rand = new Random();
+
+        this.numRows = numRows;
+        this.numCols = numCols;
+        this.numBalls = numBalls;
+        this.numColours = numColours;
+        initShade = new int[numRows][numCols];
+        colourGrid = new boolean[numColours][numRows][numCols];
+        buttonGrid = new int[numRows][numCols];
+        grid = new boolean[numRows][numCols];
+        for (int i = 0; i < numRows; ++i)
+            for (int j = 0; j < numCols; ++j)
+                grid[i][j] = rand.nextInt(7) != 0;
+        for (int c = 0; c < numColours; ++c)
+            for (int i = 0; i < numRows; ++i)
+                for (int j = 0; j < numCols; ++j)
+                    colourGrid[c][i][j] = rand.nextInt(3) == 0;
+        List<Cell> cells = new ArrayList<Cell>();
+        for (int i = 0; i < numRows; ++i) {
+            for (int j = 0; j < numCols; ++j) {
+                initShade[i][j] = rand.nextInt(2);
+                buttonGrid[i][j] = -1;
+                if (grid[i][j])
+                    cells.add(new Cell(i, j));
+            }
+        }
+        Collections.shuffle(cells);
+        target = cells.get(0);
+        for (int i = 0; i < numColours; ++i)
+            buttonGrid[cells.get(i + 1).row][cells.get(i + 1).col] = i;
+        int extra = rand.nextInt((cells.size() - numColours - numBalls - 1) / 4);
+        for (int i = 0; i < extra; ++i)
+            buttonGrid[cells.get(1 + numColours + i).row][cells.get(1 + numColours + i).col] = rand.nextInt(numColours);
+        buildGraph();
+    }
 
     public void analyzeGraph() {
         Queue<State> q = new LinkedList<State>();
@@ -44,6 +76,14 @@ public class Board {
                 }
             }
         }
+    }
+
+    public State getHardestState() {
+        State best = allStates[0];
+        for (State state : allStates)
+            if (state.getDist() > best.getDist())
+                best = state;
+        return best;
     }
 
     public void draw(GridPanel gridPanel) {
