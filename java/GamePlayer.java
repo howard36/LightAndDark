@@ -31,6 +31,7 @@ public class GamePlayer implements KeyListener {
         System.out.printf("Type 0 to 3 to move ball 0, 4 to 7 to move ball 1\n");
         System.out.printf("Type h for a hint\n");
         System.out.printf("Type u to undo move\n");
+        System.out.printf("Optimal solution uses %d steps\n", s.getDist());
         setupPlay(s);
         interactive = true;
     }
@@ -72,9 +73,7 @@ public class GamePlayer implements KeyListener {
     }
 
     private void move(int ball, int dir) {
-        if (path.peek().getWin()) {
-            System.exit(0);
-        }
+        checkForWin();
         State state = path.peek().next(ball, dir);
         if (state != path.peek()) {
             path.push(state);
@@ -83,9 +82,7 @@ public class GamePlayer implements KeyListener {
     }
 
     private void moveOptimally() {
-        if (path.peek().getWin()) {
-            System.exit(0);
-        }
+        checkForWin();
         path.push(path.peek().optimalNext());
         updateState();
     }
@@ -95,8 +92,14 @@ public class GamePlayer implements KeyListener {
         gridPanel.repaint();
     }
 
+    private void checkForWin() {
+        if (path.peek().getWin()) {
+            System.out.printf("You won in %d steps\n", path.size() - 1);
+            System.exit(0);
+        }
+    }
+
     private Board board;
-    private State state;
     private GridPanel gridPanel;
     private boolean interactive;
     Stack<State> path;
