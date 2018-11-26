@@ -35,11 +35,11 @@ int main() {
         {1, -1, -1, -1, 1},
         {-1, -1, -1, -1, -1},
         {-1, -1, 0, -1, -1}};
-    board sampleBoard = board(5, 5, 2, 2, grid, colorGrid, initShade, button, pi(2, 2));
-    vpi ballPos{pi(4, 0), pi(0, 4)};
-    vb colorFlip{0, 0};
-    state sampleState = state(&sampleBoard, ballPos, colorFlip, true);
-    level sampleLevel = level(sampleState);
+    // board sampleBoard = board(5, 5, 2, 2, grid, colorGrid, initShade, button, pi(2, 2));
+    // vpi ballPos{pi(4, 0), pi(0, 4)};
+    // vb colorFlip{0, 0};
+    // state sampleState = state(&sampleBoard, ballPos, colorFlip, true);
+    // level sampleLevel = level(sampleState);
 
     // printf("Playing Sample Level:\n");
     // sampleLevel.play();

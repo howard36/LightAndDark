@@ -1,6 +1,6 @@
 #include "../include/Macros.h"
 
-level::level(state _s) : initState(_s), b(*(_s.b)) {
+level::level(state _s) : initState(_s.getHash()), b(*(_s.b)) {
 }
 
 void printMove2(int move) {
@@ -24,7 +24,7 @@ void printMove2(int move) {
 }
 
 void level::play() const {
-    int cur = initState.getHash();
+    int cur = initState;
     vi history;
     history.push_back(cur);
     int ball, dir;
@@ -63,7 +63,7 @@ void level::play() const {
                 }
             }
             else if (ball == -3) { // reset to initial state
-                cur = initState.getHash();
+                cur = initState;
                 history.clear();
                 history.push_back(cur);
                 requestMove = false;
@@ -94,6 +94,7 @@ void level::play() const {
     }
     b.unhash(cur).print();
     printf("You Won!\n");
+    printf("You took %d moves, the optimal solution is %d moves\n", (int)history.size()-1, b.getDistance()[initState]);
 }
 
 level level::hardLevel(int maxX, int maxY, int numColors, int numBalls){

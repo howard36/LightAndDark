@@ -4,7 +4,7 @@
 
 class level {
     board b;
-    state initState;
+    int initState;
 
   public:
     level(state _s);
