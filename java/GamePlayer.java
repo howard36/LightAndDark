@@ -1,24 +1,38 @@
-import java.awt.event.*;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Stack;
 
 public class GamePlayer implements KeyListener {
 
-    public GamePlayer(Board board) {
-        this.board = board;
-        gridPanel = new GridPanel(board.getNumRows(), board.getNumCols());
+    public GamePlayer() {
         interactive = false;
-        gridPanel.addKeyListener(this);
-        board.draw(gridPanel);
-        gridPanel.repaint();
-        board.analyzeGraph();
     }
 
-    public void playOptimally(State s) {
+    public void play() {
+        System.out.print("Enter 0 to play and 1 to watch: ");
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            int mode = Integer.parseInt(in.readLine());
+            if (mode == 0) {
+                playRandomInteractively();
+            } else {
+                playRandomOptimally();
+            }
+        } catch (IOException e) {
+            playRandomInteractively();
+        }
+    }
+
+    public void playOptimally(Board board, State s) {
         interactive = false;
-        setupPlay(s);
-        Timer timer = new Timer();
+        board.analyzeGraph();
+        setupPlay(board, s);
+        timer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
                 moveOptimally();
@@ -27,17 +41,32 @@ public class GamePlayer implements KeyListener {
         timer.scheduleAtFixedRate(task, 2000, 2000);
     }
 
-    public void playInteractively(State s) {
+    public void playInteractively(Board board, State s) {
+        interactive = true;
+        board.analyzeGraph();
         System.out.printf("Type 0 to 3 to move ball 0, 4 to 7 to move ball 1\n");
         System.out.printf("Type h for a hint\n");
         System.out.printf("Type u to undo move\n");
         System.out.printf("Optimal solution uses %d steps\n", s.getDist());
-        setupPlay(s);
-        interactive = true;
+        setupPlay(board, s);
     }
 
-    public void playInteractivelyHardest() {
-        playInteractively(board.getHardestState());
+    public void playHardestInteractively(Board board) {
+        board.analyzeGraph();
+        playInteractively(board, board.getHardestState());
+    }
+
+    public void playHardestOptimally(Board board) {
+        board.analyzeGraph();
+        playOptimally(board, board.getHardestState());
+    }
+
+    public void playRandomInteractively() {
+        playHardestInteractively(getRandomBoard());
+    }
+
+    public void playRandomOptimally() {
+        playHardestOptimally(getRandomBoard());
     }
 
     // methods of KeyListener
@@ -66,23 +95,39 @@ public class GamePlayer implements KeyListener {
     public void keyTyped(KeyEvent ke) {
     }
 
-    private void setupPlay(State s) {
+    private void setupPlay(Board board, State s) {
+        gridPanel = new GridPanel(board.getNumRows(), board.getNumCols());
+        gridPanel.addKeyListener(this);
+        board.draw(gridPanel);
+        gridPanel.repaint();
         path = new Stack<State>();
         path.push(board.getState(s));
         updateState();
     }
 
     private void move(int ball, int dir) {
-        checkForWin();
+        if (path.peek().getWin()) {
+            System.out.printf("You won in %d steps\n", path.size() - 1);
+            play();
+            return;
+        }
         State state = path.peek().next(ball, dir);
         if (state != path.peek()) {
             path.push(state);
             updateState();
+        } else {
+            java.awt.Toolkit.getDefaultToolkit().beep();
         }
     }
 
     private void moveOptimally() {
-        checkForWin();
+        if (path.peek().getWin()) {
+            System.out.printf("Finished optimal play.\n");
+            if (!interactive)
+                timer.cancel();
+            play();
+            return;
+        }
         path.push(path.peek().optimalNext());
         updateState();
     }
@@ -92,15 +137,25 @@ public class GamePlayer implements KeyListener {
         gridPanel.repaint();
     }
 
-    private void checkForWin() {
-        if (path.peek().getWin()) {
-            System.out.printf("You won in %d steps\n", path.size() - 1);
-            System.exit(0);
+    private Board getRandomBoard() {
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            System.out.print("Enter the number of rows: ");
+            int numRows = Integer.parseInt(in.readLine());
+            System.out.print("Enter the number of cols: ");
+            int numCols = Integer.parseInt(in.readLine());
+            System.out.print("Enter the number of balls: ");
+            int numBalls = Integer.parseInt(in.readLine());
+            System.out.print("Enter the number of colours: ");
+            int numColours = Integer.parseInt(in.readLine());
+            return new Board(numRows, numCols, numBalls, numColours);
+        } catch (IOException e) {
+            return new Board(5, 5, 2, 2);
         }
     }
 
-    private Board board;
     private GridPanel gridPanel;
     private boolean interactive;
-    Stack<State> path;
+    private Stack<State> path;
+    private Timer timer;
 }

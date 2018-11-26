@@ -6,15 +6,6 @@ import java.util.ArrayList;
 class GridPanel extends JPanel {
 
     public GridPanel(int numRows, int numCols) {
-        JFrame frame = new JFrame();
-        frame.setSize(800, 800);
-        frame.setLocation(100, 100);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
-        frame.add(this);
-        frame.setVisible(true);
-        frame.setBackground(wallpaperColour);
-
         this.numRows = numRows;
         this.numCols = numCols;
         bg = new int[numRows][numCols];
@@ -29,7 +20,15 @@ class GridPanel extends JPanel {
             }
         }
         crossPositions = new ArrayList<Cell>();
+        JFrame frame = new JFrame();
+        frame.setSize(800, 800);
+        frame.setLocation(100, 100);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+        frame.add(this);
+        frame.setBackground(wallpaperColour);
         setFocusable(true);
+        frame.setVisible(true); // Important that this appears at end
     }
 
     public void paint(Graphics g) {
