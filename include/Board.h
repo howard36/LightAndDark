@@ -19,6 +19,7 @@ class board {
     const pi target;
     const int maxHash; // maximum hash value, upper bound on number of states
 
+    board();
     board(int _maxX,
           int _maxY,
           int _numColors,

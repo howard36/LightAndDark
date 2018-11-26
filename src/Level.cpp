@@ -1,26 +1,9 @@
 #include "../include/Macros.h"
 
-level::level(state _s) : initState(_s.getHash()), b(*(_s.b)) {
+level::level() : b(board()), initState(0), difficulty(0) {
 }
 
-void printMove2(int move) {
-    int ball = move / 4, dir = move % 4;
-    cout << "Move ball " << ball << " ";
-    if (dir == 0) {
-        cout << "down\n";
-    }
-    else if (dir == 1) {
-        cout << "right\n";
-    }
-    else if (dir == 2) {
-        cout << "up\n";
-    }
-    else if (dir == 3) {
-        cout << "left\n";
-    }
-    else {
-        cout << "ERROR when printing move: invalid direction\n";
-    }
+level::level(const state _s) : b(*(_s.b)), initState(_s.getHash()), difficulty(b.getDistance()[initState]) {
 }
 
 void level::play() const {
@@ -46,7 +29,7 @@ void level::play() const {
                     printf("ERROR in play: hint = -2, but current position is not winning\n");
                 }
                 else {
-                    printMove2(hint);
+                    printMove(hint);
                     requestMove = true;
                 }
             }
@@ -94,11 +77,19 @@ void level::play() const {
     }
     b.unhash(cur).print();
     printf("You Won!\n");
-    printf("You took %d moves, the optimal solution is %d moves\n", (int)history.size()-1, b.getDistance()[initState]);
+    printf("You took %d moves, the optimal solution is %d moves\n", (int)history.size() - 1, difficulty);
 }
 
-level level::hardLevel(int maxX, int maxY, int numColors, int numBalls){
-    board b = board::randomBoard(maxX, maxY, numColors, numBalls);
-    state hardestState = b.unhash(b.getHardestState());
-    return level(hardestState);
+level level::hardLevel(int maxX, int maxY, int numColors, int numBalls, int minDifficulty) {
+    int maxAttempts = 1000;
+    for (int i = 0; i < maxAttempts; i++) {
+        board b = board::randomBoard(maxX, maxY, numColors, numBalls);
+        state s = b.unhash(b.getHardestState());
+        level l = level(s);
+        if (l.difficulty >= minDifficulty) {
+            return l;
+        }
+    }
+    printf("ERROR in hardLevel: could not generate a level with difficulty at least %d in %d attempts\n", minDifficulty, maxAttempts);
+    return level();
 }

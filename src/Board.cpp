@@ -1,5 +1,17 @@
 #include "../include/Macros.h"
 
+board::board() : maxX(0),
+                 maxY(0),
+                 numColors(0),
+                 numBalls(0),
+                 grid(vvb()),
+                 colorGrid(vvvb()),
+                 initShade(vvb()),
+                 button(vvi()),
+                 target(pi()),
+                 maxHash(0) {
+}
+
 board::board(int _maxX,
              int _maxY,
              int _numColors,
@@ -160,12 +172,12 @@ board board::randomBoard(int maxX, int maxY, int numColors, int numBalls) {
         button[squares[i + 1].x][squares[i + 1].y] = i;
     }
     int inGrid = 0;
-    for (int i = 0; i<maxX; i++){
-        for (int j = 0; j<maxY; j++){
+    for (int i = 0; i < maxX; i++) {
+        for (int j = 0; j < maxY; j++) {
             inGrid += (int)grid[i][j];
         }
     }
-    int extra = rand() % ((inGrid - numColors - numBalls - 1) / 5);
+    int extra = rand() % ((inGrid - numColors - numBalls - 1) / 8);
     for (int i = 0; i < extra; i++) {
         button[squares[i + numColors + 1].x][squares[i + numColors + 1].y] = rand() % numColors;
     }

@@ -2,7 +2,7 @@
 #include "../include/Level.h"
 
 int main() {
-    level l = level::hardLevel(5, 5, 2, 2);
+    level l = level::hardLevel(5, 5, 4, 2, 20);
     printf("Playing Hard Level:\n");
     l.play();
 
