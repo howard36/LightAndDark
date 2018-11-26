@@ -182,10 +182,8 @@ public class State {
             return false;
         for (int i = 0; i < ballPositions.length; i++) {
             Cell p = ballPositions[i];
-            if (p.row < 0 || p.row >= board.getNumRows() || p.col < 0 || p.col >= board.getNumCols())
+            if (!board.validCell(p))
                 return false;
-            // if (grid[p.x][p.y] == 0)
-            // return false;
         }
         for (int i = 0; i < ballPositions.length; i++) {
             for (int j = i + 1; j < ballPositions.length; j++) {

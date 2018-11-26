@@ -35,6 +35,10 @@ public class GamePlayer implements KeyListener {
         interactive = true;
     }
 
+    public void playInteractivelyHardest() {
+        playInteractively(board.getHardestState());
+    }
+
     // methods of KeyListener
     public void keyPressed(KeyEvent ke) {
         if (!interactive)
