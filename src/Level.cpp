@@ -87,6 +87,7 @@ level level::hardLevel(int maxX, int maxY, int numColors, int numBalls, int minD
         state s = b.unhash(b.getHardestState());
         level l = level(s);
         if (l.difficulty >= minDifficulty) {
+            printf("Found level of difficulty >= %d in %d attempts\n", minDifficulty, i+1);
             return l;
         }
     }

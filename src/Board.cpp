@@ -100,7 +100,7 @@ void board::initGraph() {
 }
 
 void board::analyzeGraph() {
-    paths = vvll(maxHash, vll(maxHash, 0));
+    paths.push_back(vll(maxHash, 0));
     distance = vi(maxHash, -1);
     for (int i = 0; i < maxHash; i++) {
         if (checkWin(unhash(i, false))) {
@@ -109,6 +109,8 @@ void board::analyzeGraph() {
         }
     }
     for (int i = 1; i < maxHash; i++) {
+        paths.push_back(vll(maxHash, 0));
+        bool addNew = false;
         for (int j = 0; j < maxHash; j++) {
             if (!validStates[j])
                 continue;
@@ -119,19 +121,18 @@ void board::analyzeGraph() {
             }
             if (distance[j] == -1 && paths[i][j] > 0) {
                 distance[j] = i;
+                addNew = true;
+                maxDist = i;
+                hardestState = j;
             }
         }
-    }
-    maxDist = -1;
-    for (int i = 0; i < maxHash; i++) {
-        if (distance[i] > maxDist) {
-            maxDist = distance[i];
-            hardestState = i;
+        if (!addNew){
+            break;
         }
     }
-    cout << "The hardest state has a solution of length " << maxDist << "\n";
-    cout << "This is the hardest state:\n";
-    unhash(hardestState).solve();
+    // cout << "The hardest state has a solution of length " << maxDist << "\n";
+    // cout << "This is the hardest state:\n";
+    // unhash(hardestState).print();
 }
 
 bool board::checkWin(state s) const {

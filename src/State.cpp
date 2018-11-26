@@ -111,7 +111,7 @@ int state::hint() const {
 }
 
 vi state::solve() const {
-    printf("Solving the following state:\n");
-    print();
+    // printf("Solving the following state:\n");
+    // print();
     return b->solve(hash);
 }
