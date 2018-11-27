@@ -19,6 +19,10 @@ using ll = long long;
 using vll = vector<ll>;
 using vvll = vector<vll>;
 
+using md = pair<pi, pi>; // move data, ball moves from first pi to second pi
+using vmd = vector<md>;
+using vvmd = vector<vmd>;
+
 #include "../include/State.h"
 #include "../include/Board.h"
 #include "../include/Level.h"

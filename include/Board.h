@@ -4,6 +4,7 @@
 
 class board {
     vvi adj;
+    vvmd moveData;
     vb validStates;
     vvll paths; // paths[i][j] = number of length i (not necessarily simple) paths from state j to winning state
     vi distance;

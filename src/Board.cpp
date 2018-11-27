@@ -86,14 +86,17 @@ bool board::valid(state s) const {
 }
 
 void board::initGraph() {
-    adj = vvi(maxHash, vi(numBalls * 4));
+    adj = vvi(maxHash, vi(4 * numBalls));
+    moveData = vvmd(maxHash, vmd(4 * numBalls));
     validStates = vb(maxHash, false);
     for (int i = 0; i < maxHash; i++) {
         state s = unhash(i, false);
         if (valid(s)) {
             validStates[i] = true;
             for (int j = 0; j < 4 * numBalls; j++) {
-                adj[i][j] = hash(s.move(j));
+                auto data = s.applyMove(j);
+                adj[i][j] = data.first;
+                moveData[i][j] = data.second;
             }
         }
     }
@@ -103,7 +106,7 @@ void board::analyzeGraph() {
     paths.push_back(vll(maxHash, 0));
     distance = vi(maxHash, -1);
     for (int i = 0; i < maxHash; i++) {
-        if (checkWin(unhash(i, false))) {
+        if (unhash(i, false).getWin()) {
             paths[0][i] = 1;
             distance[i] = 0;
         }
@@ -126,7 +129,7 @@ void board::analyzeGraph() {
                 hardestState = j;
             }
         }
-        if (!addNew){
+        if (!addNew) {
             break;
         }
     }
@@ -144,7 +147,6 @@ bool board::checkWin(state s) const {
 }
 
 board board::randomBoard(int maxX, int maxY, int numColors, int numBalls) {
-    srand(time(NULL));
     vvb grid(maxX, vb(maxY, true));
     vvvb colorGrid(numColors, vvb(maxX, vb(maxY, false)));
     for (int i = 0; i < numColors; i++) {
@@ -186,7 +188,6 @@ board board::randomBoard(int maxX, int maxY, int numColors, int numBalls) {
 }
 
 state board::randomState() {
-    srand(time(NULL));
     vpi squares;
     for (int i = 0; i < maxX; i++) {
         for (int j = 0; j < maxY; j++) {
@@ -208,7 +209,6 @@ state board::randomState() {
 }
 
 int board::hint(int hash) const {
-    srand(time(NULL));
     int d = distance[hash];
     if (d == -1) {
         return -1;

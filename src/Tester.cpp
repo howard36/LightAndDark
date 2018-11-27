@@ -2,7 +2,8 @@
 #include "../include/Level.h"
 
 int main() {
-    level l = level::hardLevel(5, 5, 3, 2, 30);
+    srand(time(NULL));
+    level l = level::hardLevel(5, 5, 2, 3, 30);
     printf("Playing Hard Level:\n");
     l.play();
 

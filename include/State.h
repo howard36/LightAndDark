@@ -14,22 +14,29 @@ class state {
 
     state();
     state(const board *_b, vpi _ballPos, vb _colorFlip, bool checkValid);
+
+    // getter functions
     vpi getBallPos() const { return ballPos; }
     vb getColorFlip() const { return colorFlip; }
     int getHash() const { return hash; }
     bool getWin() const { return win; }
 
+    // move function
+    bool inGrid(pi p) const;
     bool getShade(pi p) const;
     int occupied(pi pos) const;
-    const state move(int m) const;
-    const state move(int ball, int dir) const;
-    void flip(int color);
-    void moveBall(int ball, pi pos);
+    int isButton(pi pos) const;
+    const pi rollBall(int ball, int dir) const;
+    const pair<int, md> applyMove(int move) const;
+
+    // print
     void printSquareRow(int x, int y, int r) const;
     void printCorner(int x, int y) const;
     void printHorizontalEdge(int x, int y) const;
     void printVerticalEdge(int x, int y) const;
     void print() const;
+
+    // solve (implemented in board)
     int hint() const;
     vi solve() const;
 };
