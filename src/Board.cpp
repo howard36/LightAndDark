@@ -180,7 +180,7 @@ board board::randomBoard(int maxX, int maxY, int numColors, int numBalls) {
             inGrid += (int)grid[i][j];
         }
     }
-    int extra = rand() % ((inGrid - numColors - numBalls - 1) / 8);
+    int extra = rand() % ((inGrid - numColors - numBalls - 1) / 5);
     for (int i = 0; i < extra; i++) {
         button[squares[i + numColors + 1].x][squares[i + numColors + 1].y] = rand() % numColors;
     }
