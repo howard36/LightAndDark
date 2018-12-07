@@ -242,13 +242,13 @@ class Board {
             return -2;
         }
         else {
-            bestMoves = [];
+            var bestMoves = [];
             for (var i = 0; i < 4 * this.numBalls; i++) {
                 if (this.distance[this.adj[hash][i]] == d - 1) {
                     bestMoves.push(i);
                 }
             }
-            return bestMoves[rand(bestMoves.length)];
+            return bestMoves[random(bestMoves.length)];
         }
     }
 

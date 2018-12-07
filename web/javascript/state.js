@@ -189,7 +189,8 @@ class State {
         }
     }
 
-    display(canvas) {
+    display() {
+        var canvas = document.getElementById("gameCanvas");
         var ctx = canvas.getContext("2d");
         console.log("Displaying State");
         console.log(this);

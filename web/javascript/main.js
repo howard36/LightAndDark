@@ -1,5 +1,4 @@
-var canvas = document.getElementById("myCanvas");
-var ctx = canvas.getContext("2d");
+var canvas = document.getElementById("gameCanvas");
 
 var grid = [
     [0, 0, 1, 1, 1],
@@ -54,11 +53,10 @@ var ballPos = [[4, 0], [0, 4]];
 var colorFlip = [false, false];
 
 var aa = [1, 2, [3,4]];
-var bb = JSON.parse(JSON.stringify(aa));
-bb[2][0] = 100;
+var bb = 3
 bb[1] = -100;
 console.log(aa);
-console.log(bb);
+console.log(bb.length);
 console.log(JSON.stringify(aa));
 console.log(typeof(bb));
 
@@ -73,7 +71,10 @@ var sampleState = new State(sampleBoard, ballPos, colorFlip);
 var sampleLevel = new Level(sampleState);
 console.log(sampleState.applyMove(4));
 console.log(sampleState);
-sampleLevel.play(canvas);
-
+sampleLevel.play();
 
 canvas.addEventListener("click", function (event) { sampleLevel.canvasClick(event); });
+
+document.getElementById("hint").onclick = function () { sampleLevel.hint(); };
+document.getElementById("undo").onclick = function () { sampleLevel.undo(); };
+document.getElementById("restart").onclick = function () { sampleLevel.restart(); };
