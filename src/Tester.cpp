@@ -3,7 +3,7 @@
 
 int main() {
     srand(time(NULL));
-    level l = level::hardLevel(5, 5, 3, 3, 30);
+    level l = level::hardLevel(5, 5, 2, 2, 20);
     printf("Playing Hard Level:\n");
     l.play();
 

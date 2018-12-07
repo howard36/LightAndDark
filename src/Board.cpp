@@ -152,7 +152,7 @@ board board::randomBoard(int maxX, int maxY, int numColors, int numBalls) {
     for (int i = 0; i < numColors; i++) {
         for (int j = 0; j < maxX; j++) {
             for (int k = 0; k < maxY; k++) {
-                colorGrid[i][j][k] = (bool)(rand() % 3 == 0); // each color covers around 1/3 of the board
+                colorGrid[i][j][k] = (rand() % 3 == 0); // each color covers around 1/3 of the board
             }
         }
     }
@@ -191,7 +191,7 @@ state board::randomState() {
     vpi squares;
     for (int i = 0; i < maxX; i++) {
         for (int j = 0; j < maxY; j++) {
-            if (button[i][j] != -1 || target == pi(i, j))
+            if (!grid[i][j] || button[i][j] != -1 || target == pi(i, j))
                 continue;
             squares.push_back(pi(i, j));
         }
@@ -208,6 +208,7 @@ state board::randomState() {
     return state(this, ballPos, colorFlip, true);
 }
 
+// return move data as well?
 int board::hint(int hash) const {
     int d = distance[hash];
     if (d == -1) {
