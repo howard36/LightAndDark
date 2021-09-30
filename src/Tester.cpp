@@ -1,11 +1,13 @@
-#include "../include/Macros.h"
 #include "../include/Level.h"
+#include "../include/Macros.h"
 
 int main() {
     srand(time(NULL));
-    level l = level::hardLevel(5, 5, 2, 2, 20);
-    printf("Playing Hard Level:\n");
-    l.play();
+    while (true) {
+        level l = level::hardLevel(5, 5, 1, 1, 10);
+        printf("Playing Hard Level:\n");
+        l.play();
+    }
 
     // vvb grid{
     //     {0, 0, 1, 1, 1},
